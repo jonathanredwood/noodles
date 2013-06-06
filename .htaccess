@@ -1,0 +1,5 @@
+AddType text/x-component .htc
+
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^.*$ main.php
