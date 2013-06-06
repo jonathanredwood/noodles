@@ -1,0 +1,49 @@
+#devpanel{
+	font-family: arial;
+	color: #fff;
+	font-size: 11px;
+	text-align: left;
+	background: #579;
+	background: #444;
+	//background: rgba(200,200,200,1);
+	
+	padding-top: 10px;
+	padding-bottom: 20px;
+	margin-top: 20px;
+
+}
+#devpanel table{
+	width: 95%;
+	margin: 0 auto;
+}
+#devpanel .devpanel-table-title{
+	font-size: 12px;
+	margin: 10px;
+	display: block;
+}
+
+#devpanel .debug-toggle{
+	display: none;
+}
+
+#devpanel .open{
+	background: url(/themes/default/graphics/up.png) no-repeat 100px;
+}
+
+#devpanel tr{
+	background: #3E3E3E;
+}
+
+#devpanel tr:nth-child(even) {background: #3A3A3A}
+#devpanel tr:nth-child(odd) {background: #3E3E3E}
+
+.devpanel-title{
+	margin-left: 10px;
+	font-size: 16px;
+	font-weight :bold;
+}
+.devpanel-copyright{
+	float: right;
+	margin-right: 10px;
+	font-size: 10px;
+}
