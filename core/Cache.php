@@ -1,6 +1,8 @@
 <?php
 
 require_once 'Cache/CacheInterface.php';
+require_once 'Cache/Disk.php';
+require_once 'Cache/Memcache.php';
 
 /**
  * Allows the storage of data between requests and users

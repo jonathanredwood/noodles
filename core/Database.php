@@ -5,6 +5,9 @@
  * @author Jonathan
  */
 require_once 'Database/DatabaseInterface.php';
+require_once 'Database/MySQL.php';
+require_once 'Database/MySQLi.php';
+require_once 'Database/PDO.php';
 
 class Database{
 	

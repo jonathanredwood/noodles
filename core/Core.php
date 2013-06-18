@@ -15,7 +15,7 @@ class Core{
 		$this->performance =	new Performance();
 		$this->performance->addPoint('Core Classes');
 		
-		require '/config.php';
+		require $_SERVER['DOCUMENT_ROOT'].'/config.php';
 		$this->config = $CFG;
 				
 		$this->db = new Database('PDO');
