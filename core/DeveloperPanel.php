@@ -56,7 +56,7 @@ class DeveloperPanel{
 
 		if(isset($table['data'])){
 			$view = new View();
-			$output .= $view->generate('/UIElements/Table.php', array('data' => $table['data']));
+			$output .= $view->generate('UIElements/Table.php', array('data' => $table['data']));
 		}
 
 		return $output;
