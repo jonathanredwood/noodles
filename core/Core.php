@@ -8,6 +8,8 @@ class Core{
 	public $db;
 	public $util;
 	public $config;
+	public $permissions;
+	public $avatarcache;
 	public $performance;
 	
 	public function __construct()
@@ -15,12 +17,12 @@ class Core{
 		$this->performance =	new Performance();
 		$this->performance->addPoint('Core Classes');
 		
-		require $_SERVER['DOCUMENT_ROOT'].'/config.php';
+		require '/config.php';
 		$this->config = $CFG;
 				
 		$this->db = new Database('PDO');
 		$this->db->connect($CFG['mysqlIP'], $CFG['mysqlUser'], $CFG['mysqlPass'], $CFG['mysqlDB']);		
-		$this->util = new Util();
+		$this->util =			new Util();
 	}	
 }
 ?>

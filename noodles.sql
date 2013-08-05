@@ -1,13 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 3.5.2.2
+-- version 4.0.4.1
 -- http://www.phpmyadmin.net
 --
--- Host: localhost:3306
--- Generation Time: Jun 06, 2013 at 06:49 AM
--- Server version: 5.5.21-log
--- PHP Version: 5.3.16
+-- Host: 127.0.0.1
+-- Generation Time: Aug 06, 2013 at 01:15 AM
+-- Server version: 5.6.11
+-- PHP Version: 5.5.0
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `noodles`
 --
+CREATE DATABASE IF NOT EXISTS `noodles` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `noodles`;
 
 -- --------------------------------------------------------
 
@@ -41,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `applications` (
 INSERT INTO `applications` (`id`, `name`, `displayName`) VALUES
 (1, 'basic', 'Basic'),
 (2, 'home', 'Home'),
-(3, 'output', 'Output');
+(3, 'admin/pages', 'Page Management');
 
 -- --------------------------------------------------------
 
@@ -53,23 +55,23 @@ DROP TABLE IF EXISTS `pages`;
 CREATE TABLE IF NOT EXISTS `pages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `application` int(8) NOT NULL,
+  `menuTitle` varchar(255) NOT NULL,
   `url` varchar(255) NOT NULL,
   `title` varchar(255) NOT NULL,
   `copy` text NOT NULL,
-  `menuTitle` varchar(255) NOT NULL,
-  `menuShow` tinyint(1) NOT NULL,
-  `permissionID` int(8) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
+  `menuShow` tinyint(1) NOT NULL DEFAULT '1',
+  `ordering` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `application` (`application`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `pages`
 --
 
-INSERT INTO `pages` (`id`, `application`, `url`, `title`, `copy`, `menuTitle`, `menuShow`, `permissionID`) VALUES
-(13, 1, 'pagenotfound', 'Page Not Found', '<h2>404 - Page Not Found</h2>\r\n\r\n<img src="http://i44.tinypic.com/f4kzev.gif" />\r\n\r\n<p>Unfortunatly the page you requested cannot be found, this is entirely your fault.</p>\r\n\r\n<a href="http://electronoodles.co.uk">home</a>', '', 0, 0),
-(14, 3, 'output', 'Output', '', 'Output', 0, 0),
-(15, 2, 'index', 'Tides', '', '', 0, 0);
+INSERT INTO `pages` (`id`, `application`, `menuTitle`, `url`, `title`, `copy`, `menuShow`, `ordering`) VALUES
+(1, 2, 'Noodles', 'index', 'Noodles PHP Framework', '', 1, 1),
+(2, 3, 'Page Management', 'admin/pages', 'Page Management', '', 1, 2);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

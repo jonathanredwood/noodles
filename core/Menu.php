@@ -13,7 +13,9 @@ class Menu{
 	public function generate()
 	{
 		$view = new View();
-		return $view->generate('/UIElements/Menu.php', array('menu'=>$this->getSiteStructure()));
+		$output = $view->generate('/UIElements/Menu.php', array('menu'=>$this->getSiteStructure()));
+		$this->core->performance->addPoint('Menu Generated');
+		return $output;
 	}
 	
 	public function getSiteStructure()
@@ -47,12 +49,14 @@ class Menu{
 			$this->core->db->prepare("SELECT url, menuTitle FROM pages 
 										WHERE menuShow = 1 
 											AND LENGTH(url) - LENGTH(REPLACE(url, '/', '')) = :depth
-											AND url LIKE :parent");
+											AND url LIKE :parent
+										ORDER BY ordering");
 			$this->core->db->bind_value(':depth', $depth, 'int');
 			$this->core->db->bind_value(':parent', $parent.'%', 'string');
 				
 		}else{
-			$this->core->db->prepare("SELECT url, menuTitle FROM pages WHERE menuShow = 1 AND LENGTH(url) - LENGTH(REPLACE(url, '/', '')) = 0");
+			// Get root pages
+			$this->core->db->prepare("SELECT url, menuTitle FROM pages WHERE menuShow = 1 AND LENGTH(url) - LENGTH(REPLACE(url, '/', '')) = 0 ORDER BY ordering");
 		}
 		$this->core->db->execute();
 		$children = $this->core->db->prepQueryAll();
@@ -68,26 +72,5 @@ class Menu{
 		return $output;
 	}
 
-		
-	public function draw(){
-		return $this->recursiveDraw($this->array);
-	}
-	
-	
-	public function recursiveDraw($array, $depth = 0){
-		$depth++;
-		$output = '<ul>';
-		foreach($array as $item){
-				
-			if(isset($item['menuTitle'])){
-				$output .= '<li><a href="'.$item['url'].'">'.$item['menuTitle'].'</a></li>';
-			}
-			
-			if(isset($item['children'])){
-				$output .= recursiveDraw($item['children'],$depth);
-			}
-		}
-		$output .= '</ul>';
-		return $output;
-	}
+
 }

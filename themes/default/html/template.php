@@ -9,7 +9,6 @@
 	<script src="/themes/default/javascript/jquery.ui.touch-punch.min.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="/themes/default/css/style.css"/>
-	<link rel="shortcut icon" href="/themes/default/graphics/favicon.png" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 </head>
 
@@ -19,10 +18,7 @@
 	
 	<div id="main">
 	
-	<img id="logo" src="/themes/default/graphics/logo-small.png"/>
-	
-	
-	<?php echo $applicationOutput; ?>
+	<?php echo $application_output; ?>
 	
 	</div>
 	

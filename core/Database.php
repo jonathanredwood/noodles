@@ -6,7 +6,6 @@
  */
 require_once 'Database/DatabaseInterface.php';
 
-
 class Database{
 	
 	var $handler;
@@ -15,15 +14,12 @@ class Database{
 	{
 		switch(strtolower($type)){
 			case 'mysql':
-				require_once 'Database/MySQL.php';
 				$this->handler = new Database\MySQL;
 				break;
 			case 'mysqli':
-				require_once 'Database/MySQLi.php';
 				$this->handler = new Database\MySQLi;
 				break;
 			case 'pdo':
-				require_once 'Database/PDO.php';
 				$this->handler = new Database\PDO;
 				break;
 		}

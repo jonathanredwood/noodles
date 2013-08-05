@@ -5,6 +5,7 @@
  */
 abstract class Application{
 	
+	var $appname;
 	var $request;
 	var $content = array();
 	var $showSkin = true;
@@ -14,8 +15,18 @@ abstract class Application{
 		
 	public function __construct()
 	{
-		$this->request = $this->getRequest();
+		
 	}
+	
+	public function setAppName($appname)
+	{
+		$this->$appname = $appname;
+	}
+	
+	public function setRequest($request)
+	{
+		$this->request = $request;
+	}	
 	
 	public function injectCore($core)
 	{
@@ -30,19 +41,6 @@ abstract class Application{
 	public function getContent()
 	{
 		return $this->content;
-	}
-		
-	public function getRequest()
-	{
-		//get current request
-		$request = explode('?',$_SERVER['REQUEST_URI']);
-		$request = trim($request[0], '/');
-		if(empty($request)) $request = 'index';
-				
-		// 404 handling
-		if(!file_exists( 'applications/'. $request . '_app.php' ) && !file_exists( 'templates/'. $request . '_tpl.php' )) $request = 'pagenotfound';
-		
-		return $request;
 	}
 }
 

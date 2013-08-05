@@ -4,18 +4,21 @@
  */
 // Autoloading
 function autoload($class) {
-	$directories = array('core/', 'thirdparty/');
+	
+	str_replace('\\',DIRECTORY_SEPARATOR,$class);
+	
+	$directories = array('core/');
 	
 	foreach($directories as $directory){
 		if(file_exists($directory.$class.'.php')){
-			require_once $directory.$class.'.php';
+			require_once '/'.$directory.$class.'.php';
 		}
 	}
 }
 
 spl_autoload_register('autoload');
 
-date_default_timezone_set('UTC');
+date_default_timezone_set('Europe/London');
 
 session_start();
 ob_start('ob_gzhandler');
@@ -31,8 +34,8 @@ if(extension_loaded('memcache')){
 	$core->performance->addPoint('Memcache sessions set');
 }
 
-/*
 // Mobile Detection
+/*
 if(!isset($_SESSION['mobile'])){
 	$mob = new Mobile_Detect();
 	if($mob->isMobile()){
@@ -63,33 +66,25 @@ $core->db->bind_value(':request', $request, 'string');
 $core->db->execute();
 $pagedata = $core->db->prepQueryFirst();
 
-if(!$pagedata){
-	//404
-}
+$appname =  $pagedata['appname'];
 
-$request =  $pagedata['appname'];
-
-if(!file_exists( 'applications/'. $pagedata['appname'] . '_app.php' ) && !file_exists( 'templates/'. $pagedata['appname'] . '_tpl.php' )){
+if(!file_exists( 'applications/'. $appname . '_app.php' ) && !file_exists( 'templates/'. $appname . '_tpl.php' )){
 	//if the application requested cannot be found then use pagenotfound
 	$pagedata = $core->db->queryFirst("SELECT pages.title, pages.copy, pages.url, applications.name as appname
 						FROM pages LEFT JOIN applications ON pages.application = applications.id WHERE pages.url = 'pagenotfound'");
-	$request =  $pagedata['appname'];
+	$appname =  $pagedata['appname'];
 }
 
-if(file_exists( 'applications/'. $request . '_app.php' )){
+if(file_exists( 'applications/'. $appname . '_app.php' )){
 	//Load and instantiate Applications
-	require_once 'applications/'. $request . '_app.php';
+	require_once 'applications/'. $appname . '_app.php';
 	ob_start();
 	$application = new PageApplication();
+	$application->setAppName($appname);
+	$application->setRequest($request);
 	$application->injectCore($core);
 	$application->injectData($pagedata);
-	$application->run();
-
-	$content = $application->getContent();
-	$errors = ob_get_contents(); //catches all application errors
-	ob_end_clean();
 	
-	$core->performance->addPoint('Application ('.$request.')');
 	/*
 	if($_SESSION['mobile']){
 		if($application->theme == 'default'){
@@ -97,8 +92,18 @@ if(file_exists( 'applications/'. $request . '_app.php' )){
 		}
 	}
 	*/
+	
+	$application->run();
+
+	$content = $application->getContent();
+	$errors = ob_get_contents(); //catches all application errors
+	ob_end_clean();
+	
+	$core->performance->addPoint('Application ('.$appname.')');
+	
+
 	//build html
-	$template = new Template($request, $content, $application->theme, $application->showSkin);
+	$template = new Template($appname, $content, $application->theme, $application->showSkin);
 	$template->injectCore($core);
 	
 	// outputs the markup as minified to save bandwidth while not in dev mode

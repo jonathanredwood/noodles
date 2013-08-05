@@ -113,7 +113,7 @@ class Util{
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $query_url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 	
 		/* Execute CURL and get the response */
 		return curl_exec($ch);

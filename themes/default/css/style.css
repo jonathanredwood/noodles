@@ -15,20 +15,13 @@ body{
 	text-align: center;
 }
 
-#logo{
-	display: block;
-	margin: 10px auto;
-	
+#main{
+	width: 900px;
+	margin: 20px auto;
 }
 
-.slider{
-	display: inline-block;
-	margin: 10px 40px 30px 40px;
-	height: 250px;
-}
-
-.ui-widget-header{
-	background: #3ad;
+table{
+	width: 100%;
 }
 
 #footer{
