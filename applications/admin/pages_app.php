@@ -21,9 +21,29 @@ class PageApplication extends Application{
 			
 			// Actions
 			
+			if($_GET['action'] == 'add'){
+				$this->content['editor'] = true;
+				$this->content['applications'] = $this->list_applications();
+		
+				if(isset($_POST['submit'])){
+					$menuShow = ($_POST['menuShow'] == 'on')? true:false;
+					$this->create_page($_POST['application'], $_POST['menuTitle'], $_POST['title'], $_POST['url'], $_POST['copy'], $menuShow);
+					//header('Location: /pages');
+					//exit();
+				}
+			}
+			
 			if(isset($_GET['pageid']) && is_numeric($_GET['pageid'])){
 				
 				if($_GET['action'] == 'edit'){
+					
+					if(isset($_POST['submit'])){
+						$menuShow = ($_POST['menuShow'] == 'on')? true:false;
+						$this->edit_page($_GET['pageid'],$_POST['application'], $_POST['menuTitle'], $_POST['title'], $_POST['url'], $_POST['copy'], $menuShow);
+						//header('Location: /pages');
+						//exit();
+					}
+					
 					// Include editing stuff
 					$this->content['editor'] = true;
 					$this->content['pagedata'] = $this->get_page($_GET['pageid']);
@@ -94,22 +114,58 @@ class PageApplication extends Application{
 	 * Get an array of all the applications
 	 */
 	public function list_applications(){
-		return $this->core->db->queryAll("SELECT * FROM applications");
+		return $this->core->db->queryAll("SELECT * FROM applications ORDER BY displayname");
 	}
 	
 	/**
 	 * Create a new page
-	 * @param id $application
+	 * @param int $application
+	 * @param string $menutitle
 	 * @param string $title
 	 * @param string $url
+	 * @param string $copy
+	 * @param int $menushow
 	 */
-	public function create_page($application, $title, $url){
-		/*
-		$this->core->db->prepare("INSERT INTO pages () :parent");
-		$this->core->db->bind_value(':parent', $id, 'int');
+	public function create_page($application, $menutitle, $title, $url, $copy, $menushow){
+		$this->core->db->prepare("INSERT INTO pages (application, url, menuTitle, title, copy, menuShow) VALUES (:application, :url, :menutitle, :title, :copy, :menushow) ");
+		$this->core->db->bind_value(':application', $application, 'int');
+		$this->core->db->bind_value(':menutitle', $menutitle, 'string');
+		$this->core->db->bind_value(':title', $title, 'string');
+		$this->core->db->bind_value(':url', $url, 'string');
+		$this->core->db->bind_value(':copy', $copy, 'string');
+		$this->core->db->bind_value(':menushow', $menushow, 'int');
 		$this->core->db->execute();
-		*/
-		return false;
+		// Set the ordering to the ID of the page
+		$this->core->db->query("UPDATE pages SET ordering = ".$this->core->db->lastInsertId()." WHERE id = ".$this->core->db->lastInsertId());
+	}
+	
+	/**
+	 * Edit page
+	 * @param int $application
+	 * @param string $menutitle
+	 * @param string $title
+	 * @param string $url
+	 * @param string $copy
+	 * @param int $menushow
+	 */
+	public function edit_page($id, $application, $menutitle, $title, $url, $copy, $menushow){
+		$this->core->db->prepare("UPDATE pages SET 
+									application = :application, 
+									url = :url,
+									menuTitle = :menutitle,
+									title = :title, 
+									copy = :copy, 
+									menuShow = :menushow
+										WHERE id = :id");
+		
+		$this->core->db->bind_value(':id', $id, 'int');
+		$this->core->db->bind_value(':application', $application, 'int');
+		$this->core->db->bind_value(':menutitle', $menutitle, 'string');
+		$this->core->db->bind_value(':title', $title, 'string');
+		$this->core->db->bind_value(':url', $url, 'string');
+		$this->core->db->bind_value(':copy', $copy, 'string');
+		$this->core->db->bind_value(':menushow', $menushow, 'int');
+		$this->core->db->execute();
 	}
 	
 	/**
