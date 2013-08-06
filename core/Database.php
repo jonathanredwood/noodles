@@ -91,6 +91,11 @@ class Database{
 		return $this->handler->prepNumRows();
 	}
 	
+	public function lastInsertId()
+	{
+		return $this->handler->lastInsertId();
+	}
+	
 	public function execute()
 	{
 		return $this->handler->execute();

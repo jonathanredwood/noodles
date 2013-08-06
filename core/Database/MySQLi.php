@@ -239,6 +239,14 @@ class MySQLi implements DatabaseInterface{
 	}
 	
 	/**
+	 * Returns the ID of the last inserted row
+	 */
+	public function lastInsertId()
+	{
+		return $this->link->insert_id();
+	}
+	
+	/**
 	 * Allows suppression of logging for queries that need to be hidden
 	 */
 	public function disableLogging()

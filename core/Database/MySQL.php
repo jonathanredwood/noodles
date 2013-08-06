@@ -109,6 +109,14 @@ class MySQL implements DatabaseInterface{
 		return mysql_num_rows($this->result);
 	}
 	
+	/**
+	 * Returns the ID of the last inserted row
+	 */
+	public function lastInsertId()
+	{
+		return mysql_insert_id($this->link);
+	}
+	
 	public function execute()
 	{
 		$currentQuery = $this->prepQuery;
