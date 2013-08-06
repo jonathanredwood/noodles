@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 06, 2013 at 01:15 AM
+-- Generation Time: Aug 06, 2013 at 05:39 AM
 -- Server version: 5.6.11
 -- PHP Version: 5.5.0
 
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `applications` (
   `name` varchar(255) CHARACTER SET utf8 NOT NULL,
   `displayName` varchar(255) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `applications`
@@ -43,7 +43,8 @@ CREATE TABLE IF NOT EXISTS `applications` (
 INSERT INTO `applications` (`id`, `name`, `displayName`) VALUES
 (1, 'basic', 'Basic'),
 (2, 'home', 'Home'),
-(3, 'admin/pages', 'Page Management');
+(3, 'admin/pages', 'Page Management'),
+(4, 'forward', 'Redirect to First Child');
 
 -- --------------------------------------------------------
 
@@ -63,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `ordering` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `application` (`application`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `pages`
@@ -71,7 +72,8 @@ CREATE TABLE IF NOT EXISTS `pages` (
 
 INSERT INTO `pages` (`id`, `application`, `menuTitle`, `url`, `title`, `copy`, `menuShow`, `ordering`) VALUES
 (1, 2, 'Noodles', 'index', 'Noodles PHP Framework', '', 1, 1),
-(2, 3, 'Page Management', 'admin/pages', 'Page Management', '', 1, 2);
+(2, 3, 'Page Management', 'admin/pages', 'Page Management', '', 1, 2),
+(3, 2, 'Page Not Found', 'pagenotfound', 'Page Not Found', 'Error 404 - Page Not Found', 0, 3);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
