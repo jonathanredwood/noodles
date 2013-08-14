@@ -10,7 +10,7 @@ class Memcache implements CacheInterface{
 			$this->memcache = new \Memcache;
 			$this->memcache->connect('localhost', 11211);
 		}else{
-			
+			return false;
 		}
 	}
 	

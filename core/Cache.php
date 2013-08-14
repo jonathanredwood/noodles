@@ -15,9 +15,11 @@ class Cache{
 	{
 		switch(strtolower($type)){
 			case 'disk':
+				require_once 'Cache/Disk.php';
 				$this->handler = new Cache\Disk;
 				break;
 			case 'memcache':
+				require_once 'Cache/Memcache.php';
 				$this->handler = new Cache\Memcache;
 				break;
 		}

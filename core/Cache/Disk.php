@@ -11,18 +11,18 @@ class Disk implements CacheInterface{
 		}else{
 			$expiry = '0';
 		}
-		$json = json_encode(array('expires'=>$expiry, 'data'=>$data));
-		return file_put_contents('./cache/'.sha1($key).'.cache', $json);
+		$serialized = serialize(array('expires'=>$expiry, 'data'=>$data));
+		return file_put_contents('./cache/'.sha1($key).'.cache', $serialized);
 	}
 	
 	public function get($key)
 	{
 		$filename = sha1($key);
 		if(file_exists('./cache/'.$filename.'.cache')){
-			$json = json_decode(file_get_contents('./cache/'.$filename.'.cache'));
+			$data = unserialize(file_get_contents('./cache/'.$filename.'.cache'));
 			
-			if($json->expires == 0 || $json->expires > time()){
-				return $json->data;				
+			if($data['expires'] == 0 || $data['expires'] > time()){
+				return $data['data'];				
 			}else{
 				unlink('./cache/'.$filename.'.cache');
 				return false;
