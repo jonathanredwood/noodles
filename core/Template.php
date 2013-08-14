@@ -23,7 +23,7 @@ class Template{
 		//if there is a template output to it
 		if(file_exists( 'templates/'. $this->application . '_tpl.php' )){
 			$view = new View();
-			return $view->generate('/templates/'. $this->application . '_tpl.php', $this->content);
+			return $view->generate('templates/'. $this->application . '_tpl.php', $this->content);
 		}
 	}
 	
@@ -34,7 +34,7 @@ class Template{
 				
 		if($this->showSkin){
 			$view = new View();
-			$output = $view->generate('/themes/'.$this->theme.'/html/template.php', $this->content);
+			$output = $view->generate('themes/'.$this->theme.'/html/template.php', $this->content);
 			$this->core->performance->addPoint('Skin Template');
 		}else{
 			$output = $this->content['application_output'];

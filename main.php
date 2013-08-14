@@ -2,6 +2,9 @@
 /**
  * Every request that does not go directly to a file is directed to main.php
  */
+
+set_include_path( get_include_path() . PATH_SEPARATOR . $_SERVER['DOCUMENT_ROOT'] );
+
 // Autoloading
 function autoload($class) {
 	
@@ -11,7 +14,7 @@ function autoload($class) {
 	
 	foreach($directories as $directory){
 		if(file_exists($directory.$class.'.php')){
-			require_once '/'.$directory.$class.'.php';
+			require_once $directory.$class.'.php';
 		}
 	}
 }
@@ -20,10 +23,8 @@ spl_autoload_register('autoload');
 
 date_default_timezone_set('Europe/London');
 
-session_start();
 ob_start('ob_gzhandler');
 set_time_limit(30);
-$_SESSION['currentpage'] = '/';
 
 $core = new Core();
 $core->performance->addPoint('Session & Environment');
@@ -33,6 +34,8 @@ if(extension_loaded('memcache')){
 	ini_set('session.save_path', "tcp://localhost:11211");
 	$core->performance->addPoint('Memcache sessions set');
 }
+session_start();
+$_SESSION['currentpage'] = '/';
 
 // Mobile Detection
 /*

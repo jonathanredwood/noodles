@@ -4,7 +4,7 @@
  * Populates a view template with data and uses ouput buffering to store it as a variable
  *
  * $view = new View();
- * $content = $view->generate('/UIElements/Table.php', array('var1'=>'somedata', 'var2'=>'somedata'));
+ * $content = $view->generate('core/UIElements/Table.php', array('var1'=>'somedata', 'var2'=>'somedata'));
  *
  * @author Jonathan Redwood <jred.co.uk>
  */
@@ -19,5 +19,9 @@ class View extends Core{
                 $output = ob_get_contents(); // Get the content of the output buffer
                 ob_end_clean();
                 return $output;
+        }
+        
+        public function __toString(){
+        	
         }
 }

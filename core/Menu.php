@@ -13,7 +13,7 @@ class Menu{
 	public function generate()
 	{
 		$view = new View();
-		$output = $view->generate('/UIElements/Menu.php', array('menu'=>$this->getSiteStructure()));
+		$output = $view->generate('core/UIElements/Menu.php', array('menu'=>$this->getSiteStructure()));
 		$this->core->performance->addPoint('Menu Generated');
 		return $output;
 	}

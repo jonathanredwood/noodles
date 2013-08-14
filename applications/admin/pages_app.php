@@ -99,7 +99,7 @@ class PageApplication extends Application{
 			}
 			
 			$view = new View();
-			$this->content['output'] = $view->generate('/UIElements/Table.php', array('id' => 'list-table', 'data' => $table));
+			$this->content['output'] = $view->generate('core/UIElements/Table.php', array('id' => 'list-table', 'data' => $table));
 			
 
 		}
