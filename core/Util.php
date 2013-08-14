@@ -18,27 +18,6 @@ class Util{
 	}
 	
 	/**
-	 * Convert seconds to days, hours, minutes and seconds
-	 * 
-	 */
-	public function secondsToTime($time){
-		$seconds = $time%60;
-		$mins = floor($time/60)%60;
-		$hours = floor($time/60/60)%24;
-		$days = floor($time/60/60/24);
-		return $days .'d '. self::number_pad($hours) . 'h ' .self::number_pad($mins) . 'm ' ;//. self::number_pad($seconds) . 's';
-	}
-	
-	
-	/**
-	 * Pad
-	 */
-	public function number_pad($number){
-		return str_pad((int) $number,2,"0",STR_PAD_LEFT);
-	}
-
-	
-	/**
 	 * Find all URLs in a string and add anchor tags
 	 */
 	public function auto_link_text($text){
@@ -81,44 +60,7 @@ class Util{
 		$sorted = array_merge($commonKeysInOrder, $commonKeysWithValue);
 		return $sorted;
 	}
-	
-	/**
-	* Geolocation API access
-	*
-	* @param    string  $ip         IP address to query
-	* @param    string  $format     output format of response
-	*
-	* @return   string  XML, JSON or CSV string
-	*/
-	public function get_ip_location($ip, $format="xml") {
-	
-		$ip = explode(':',$ip);
-		/* Set allowed output formats */
-		$formats_allowed = array("json", "xml", "raw");
 		
-		require '/config.php';
-	
-		/* IP location query url */
-		$query_url = "http://api.ipinfodb.com/v2/ip_query.php?key=".$CFG['geolocationKey']."&ip=";
-	
-		/* Male sure that the format is one of json, xml, raw.
-		 Or else default to xml */
-		if(!in_array($format, $formats_allowed)) {
-			$format = "xml";
-		}
-	
-		$query_url = $query_url . "{$ip[0]}&output={$format}";
-	
-		/* Init CURL and its options*/
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $query_url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-	
-		/* Execute CURL and get the response */
-		return curl_exec($ch);
-	}
-	
 	public function fetch_contents($url){
 		if(function_exists('curl_init')){
 			$ch = curl_init();
