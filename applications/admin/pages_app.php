@@ -18,6 +18,8 @@ class PageApplication extends Application{
 		
 		$this->content['title'] = 'Page Management- electronoodles.co.uk';
 		$this->content['head'][] = '<link rel="stylesheet" type="text/css" href="/themes/default/css/cms.css"/>';
+		$this->content['head'][] = '<script src="http://js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>';
+		$this->content['head'][] = '<script type="text/javascript">bkLib.onDomLoaded(nicEditors.allTextAreas);</script>';
 		
 		$this->content['output'] = '';
 		
@@ -29,11 +31,10 @@ class PageApplication extends Application{
 		
 		if(isset($_GET['action'])){
 			
-			// Actions
-			
+			// Actions			
 			if($_GET['action'] == 'add'){
-				$this->content['editor'] = true;
 				$this->content['applications'] = $Pages->list_applications();
+				$this->content['groups'] = $this->group_permissions();
 		
 				if(isset($_POST['submit'])){
 					$menuShow = ($_POST['menuShow'] == 'on')? true:false;
@@ -45,6 +46,10 @@ class PageApplication extends Application{
 			
 			if(isset($_GET['pageid']) && is_numeric($_GET['pageid'])){
 				
+				if($_GET['action'] == 'delete'){
+					$Pages->delete_page($_GET['pageid']);
+				}
+				
 				if($_GET['action'] == 'edit'){
 					
 					if(isset($_POST['submit'])){
@@ -55,11 +60,9 @@ class PageApplication extends Application{
 					}
 					
 					// Include editing stuff
-					$this->content['editor'] = true;
-					$this->content['head'][] = '<script src="http://js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>';
-					$this->content['head'][] = '<script type="text/javascript">bkLib.onDomLoaded(nicEditors.allTextAreas);</script>';
 					$this->content['pagedata'] = $Pages->get_page($_GET['pageid']);
 					$this->content['applications'] = $Pages->list_applications();
+					$this->content['groups'] = $this->group_permissions();
 				}
 				
 				if($_GET['action'] == 'orderup'){	
@@ -94,7 +97,8 @@ class PageApplication extends Application{
 						'URL'	=> array('show' => true, 'text' => $data['url'], 'href' => '/'.$data['url']),
 						'Up'	=> array('show' => true, 'image' => array('src' => '/themes/default/graphics/arrows/up32.png', 'width' => '16'), 'href' => '?pageid='.$data['id'].'&action=orderup'),
 						'Down'	=> array('show' => true, 'image' => array('src' => '/themes/default/graphics/arrows/down32.png', 'width' => '16'), 'href' => '?pageid='.$data['id'].'&action=orderdown'),
-						'Edit'	=> array('show' => true, 'center' => true, 'image' => array('src' => '/themes/default/graphics/list.png', 'width' => '16'), 'href' => '?pageid='.$data['id'].'&action=edit')
+						'Edit'	=> array('show' => true, 'center' => true, 'image' => array('src' => '/themes/default/graphics/list.png', 'width' => '16'), 'href' => '?pageid='.$data['id'].'&action=edit'),
+						//'Delete'	=> array('show' => true, 'center' => true, 'image' => array('src' => '/themes/default/graphics/cancel.png', 'width' => '16'), 'href' => '?pageid='.$data['id'].'&action=delete')
 				);
 			}
 			
@@ -103,6 +107,10 @@ class PageApplication extends Application{
 			
 
 		}
+	}
+	
+	public function group_permissions(){
+		return $groups = $this->core->db->queryAll("SELECT * FROM groups");
 	}
 }
 

@@ -47,16 +47,25 @@ class Pages{
 	 */
 	public function create_page($application, $menutitle, $title, $url, $copy, $menushow)
 	{
-		$this->core->db->prepare("INSERT INTO pages (application, url, menuTitle, title, copy, menuShow) VALUES (:application, :url, :menutitle, :title, :copy, :menushow) ");
-		$this->core->db->bind_value(':application', $application, 'int');
-		$this->core->db->bind_value(':menutitle', $menutitle, 'string');
-		$this->core->db->bind_value(':title', $title, 'string');
+		//check if a page already exists at the given URL
+		$this->core->db->prepare("SELECT id FROM pages WHERE url = :url");
 		$this->core->db->bind_value(':url', $url, 'string');
-		$this->core->db->bind_value(':copy', $copy, 'string');
-		$this->core->db->bind_value(':menushow', $menushow, 'int');
-		$this->core->db->execute();
-		// Set the ordering to the ID of the page
-		$this->core->db->query("UPDATE pages SET ordering = ".$this->core->db->lastInsertId()." WHERE id = ".$this->core->db->lastInsertId());
+		$this->core->db->execute();		
+		if($this->core->db->prepNumRows()){
+			return false;
+		}else{
+			$this->core->db->prepare("INSERT INTO pages (application, url, menuTitle, title, copy, menuShow) VALUES (:application, :url, :menutitle, :title, :copy, :menushow) ");
+			$this->core->db->bind_value(':application', $application, 'int');
+			$this->core->db->bind_value(':menutitle', $menutitle, 'string');
+			$this->core->db->bind_value(':title', $title, 'string');
+			$this->core->db->bind_value(':url', $url, 'string');
+			$this->core->db->bind_value(':copy', $copy, 'string');
+			$this->core->db->bind_value(':menushow', $menushow, 'int');
+			$this->core->db->execute();
+			// Set the ordering to the ID of the page
+			$this->core->db->query("UPDATE pages SET ordering = ".$this->core->db->lastInsertId()." WHERE id = ".$this->core->db->lastInsertId());
+			return true;
+		}
 	}
 	
 	/**
@@ -87,6 +96,18 @@ class Pages{
 		$this->core->db->bind_value(':copy', $copy, 'string');
 		$this->core->db->bind_value(':menushow', $menushow, 'int');
 		$this->core->db->execute();
+	}
+	
+	/**
+	 * Delete a page
+	 * @param int $id
+	 * @return boolean
+	 */
+	public function delete_page($id)
+	{
+		$this->core->db->prepare("DELETE FROM pages WHERE id = :id");
+		$this->core->db->bind_value(':id', $id, 'int');
+		return $this->core->db->execute();
 	}
 	
 	/**
