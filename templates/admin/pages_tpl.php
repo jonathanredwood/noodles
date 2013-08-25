@@ -36,10 +36,10 @@
 		</div>
 		
 		<div class="section right">
-		<label for="groups">Groups</label>
-		<select name="groups" multiple size="<?php echo count($groups) ?>">
+		<label for="groups[]">Groups</label>
+		<select name="groups[]" multiple size="<?php echo count($groups) ?>">
 		<?php foreach($groups as $group): ?>
-			 <option selected value="<?php echo $group['id'] ?>"><?php echo $group['displayName'] ?></option>
+			 <option <?php if($_GET['action'] == 'add' || $group['allow']) echo 'selected' ?> value="<?php echo $group['teamID'] ?>"><?php echo $group['displayName'] ?></option>
 		<?php endforeach; ?>
 		</select>
 		

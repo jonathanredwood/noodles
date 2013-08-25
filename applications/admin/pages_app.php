@@ -2,7 +2,7 @@
 
 class PageApplication extends Application{
 
-	public function __construct(){
+	public function __construct(){	
 		parent::__construct();
 	}
 
@@ -13,9 +13,9 @@ class PageApplication extends Application{
 		}
 	}
 	
-	public function run(){
+	public function run(){		
 		$this->checkPermission();
-		
+
 		$this->content['title'] = 'Page Management- electronoodles.co.uk';
 		$this->content['head'][] = '<link rel="stylesheet" type="text/css" href="/themes/default/css/cms.css"/>';
 		$this->content['head'][] = '<script src="http://js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>';
@@ -24,21 +24,21 @@ class PageApplication extends Application{
 		$this->content['output'] = '';
 		
 		$Pages = new Pages($this->core);
-		
+			
 		$parentid = $Pages->get_parent_id($_GET['pageid']);
 		$this->content['parentid'] = $parentid;
-
 		
 		if(isset($_GET['action'])){
 			
 			// Actions			
 			if($_GET['action'] == 'add'){
 				$this->content['applications'] = $Pages->list_applications();
-				$this->content['groups'] = $this->group_permissions();
+				$this->content['groups'] = $this->get_page_permissions($_GET['pageid']);
 		
 				if(isset($_POST['submit'])){
 					$menuShow = ($_POST['menuShow'] == 'on')? true:false;
 					$Pages->create_page($_POST['application'], $_POST['menuTitle'], $_POST['title'], $_POST['url'], $_POST['copy'], $menuShow);
+					$Pages->save_permissions($_GET['pageid'], $_POST['groups']);
 					//header('Location: /pages');
 					//exit();
 				}
@@ -55,6 +55,7 @@ class PageApplication extends Application{
 					if(isset($_POST['submit'])){
 						$menuShow = ($_POST['menuShow'] == 'on')? true:false;
 						$Pages->edit_page($_GET['pageid'],$_POST['application'], $_POST['menuTitle'], $_POST['title'], $_POST['url'], $_POST['copy'], $menuShow);
+						$Pages->save_permissions($_GET['pageid'], $_POST['groups']);
 						//header('Location: /pages');
 						//exit();
 					}
@@ -62,7 +63,7 @@ class PageApplication extends Application{
 					// Include editing stuff
 					$this->content['pagedata'] = $Pages->get_page($_GET['pageid']);
 					$this->content['applications'] = $Pages->list_applications();
-					$this->content['groups'] = $this->group_permissions();
+					$this->content['groups'] = $Pages->get_page_permissions($_GET['pageid']);
 				}
 				
 				if($_GET['action'] == 'orderup'){	
@@ -107,10 +108,6 @@ class PageApplication extends Application{
 			
 
 		}
-	}
-	
-	public function group_permissions(){
-		return $groups = $this->core->db->queryAll("SELECT * FROM groups");
 	}
 }
 

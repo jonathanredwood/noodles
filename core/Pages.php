@@ -322,6 +322,80 @@ class Pages{
 		}
 		return $output;
 	}
+	
+	/**
+	 * Get an array of the groups
+	 * @return array
+	 */
+	public function get_groups(){
+		return $this->core->db->queryAll("SELECT * FROM groups");
+	}
+	
+	/**
+	 * Get the permissions for a given page
+	 * @param int $id
+	 */
+	public function get_page_permissions($id){
+		$this->core->db->prepare("SELECT groups.displayName, groups.teamID, permissions_pages_link.allow
+									FROM permissions_pages_link 
+									LEFT JOIN groups ON groups.teamID = permissions_pages_link.teamID
+									WHERE permissions_pages_link.teamID IN(SELECT groups.teamID FROM groups)
+										AND permissions_pages_link.pageID = :id");
+		$this->core->db->bind_value(':id', $id, 'int');
+		$this->core->db->execute();
+		if($groups = $this->core->db->prepQueryAll()){
+			return $groups;
+		}else{
+			$groups = $this->get_groups();
+			foreach($groups as $key => $group){
+				$groups[$key]['allow'] = 1;
+			}
+			return $groups;
+		}
+	}
+	
+	public function save_permissions($pageID, $settings){
+		// Build an array of the group IDs and the desired setting
+		$groups = $this->get_groups();
+		$array = array();
+		foreach($groups as $group){
+			$array[$group['teamID']] = false;
+			foreach($settings as $setting){
+				if($group['teamID'] == $setting){
+					$array[$group['teamID']] = true;
+					break;
+				}				
+			}
+		}
+		foreach($array as $teamID => $allow){
+			$this->save_permission($pageID, $teamID, $allow);
+		}		
+	}
+	
+	public function save_permission($pageID, $teamID, $allow){
+		if($allow){
+			$allow = 1;
+		}else{
+			$allow = 0;
+		}
+		
+		$this->core->db->prepare("SELECT id FROM permissions_pages_link WHERE pageID = :pageID AND teamID = :teamID");
+		$this->core->db->bind_value(':pageID', $pageID, 'int');
+		$this->core->db->bind_value(':teamID', $teamID, 'int');
+		$this->core->db->execute();
+		
+		if($this->core->db->prepNumRows()){
+			$this->core->db->prepare("UPDATE permissions_pages_link SET allow = :allow WHERE pageID = :pageID AND teamID = :teamID");
+		}else{
+			$this->core->db->prepare("INSERT INTO permissions_pages_link (pageID, teamID, allow) VALUES (:pageID, :teamID, :allow)");
+		}
+		
+		$this->core->db->bind_value(':pageID', $pageID, 'int');
+		$this->core->db->bind_value(':teamID', $teamID, 'int');
+		$this->core->db->bind_value(':allow', $allow, 'int');
+		return $this->core->db->execute();
+	}
+	
 }
 
 ?>
