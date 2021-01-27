@@ -38,6 +38,11 @@ abstract class Application{
 		$this->content = array_merge($this->content, $data);
 	}
 	
+	public function generate_output(){
+		$template = new Template($this->core, $this->appname, $this->content, $this->theme, $this->showSkin);
+		return $template->buildOutput();
+	}
+	
 	public function getContent()
 	{
 		return $this->content;

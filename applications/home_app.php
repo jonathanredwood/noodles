@@ -7,7 +7,7 @@ class PageApplication extends Application{
 	}
 		
 	public function run(){
-
+		$this->content['value'] = 'bananas';
 	}
 }
 

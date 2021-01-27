@@ -71,7 +71,7 @@ $pagedata = $core->db->prepQueryFirst();
 
 $appname =  $pagedata['appname'];
 
-if(!file_exists( 'applications/'. $appname . '_app.php' ) && !file_exists( 'templates/'. $appname . '_tpl.php' )){
+if(!file_exists( 'applications/'. $appname . '_app.php' )){
 	//if the application requested cannot be found then use pagenotfound
 	$pagedata = $core->db->queryFirst("SELECT pages.title, pages.copy, pages.url, applications.name as appname
 						FROM pages LEFT JOIN applications ON pages.application = applications.id WHERE pages.url = 'pagenotfound'");
@@ -104,20 +104,18 @@ if(file_exists( 'applications/'. $appname . '_app.php' )){
 	
 	$core->performance->addPoint('Application ('.$appname.')');
 	
-
+	$output = $application->generate_output();
 	//build html
-	$template = new Template($appname, $content, $application->theme, $application->showSkin);
-	$template->injectCore($core);
-	
+		
 	// outputs the markup as minified to save bandwidth while not in dev mode
 	if(isset($_SESSION['development']) && $_SESSION['development']){
 		// unminified
-		echo $template->buildOutput();
+		echo $output;
 	}else{
 		// minfied
 		$search = array( '/\>[^\S ]+/s', '/[^\S ]+\</s', '/(\s)+/s');
 		$replace = array('>', '<', '\\1');
-		echo preg_replace($search, $replace, $template->buildOutput());
+		echo preg_replace($search, $replace, $output);
 	}
 }
 

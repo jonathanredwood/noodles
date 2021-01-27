@@ -3,19 +3,19 @@
 class Template{
 	
 	var $application;
+	var $showSkin;
+	var $content;
+	var $theme;
 
 	protected $core;
 	
-	public function __construct($application, $content, $theme = 'default', $showSkin = true){
+	public function __construct($core, $application, $content, $theme = 'default', $showSkin = true){
 
+		$this->core = $core;
 		$this->application = $application;
 		$this->showSkin = $showSkin;
 		$this->content = $content;
 		$this->theme = $theme;
-	}
-	
-	public function injectCore($core){
-		$this->core = $core;
 	}
 	
 	public function getApplicationOutput(){
